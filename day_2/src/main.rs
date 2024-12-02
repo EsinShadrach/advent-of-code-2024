@@ -19,7 +19,7 @@ fn read_input() {
             })
             .collect();
 
-        if is_safe_report(&items) {
+        if is_safe_report(&items) || can_be_safe(&items) {
             _safe_count += 1;
         } else {
             _unsafe_count += 1;
@@ -33,11 +33,6 @@ fn read_input() {
 /// 1. The levels are either all increasing or all decreasing.
 /// 2. Any two adjacent levels differ by at least 1 and at most 3.
 fn is_safe_report(data: &Vec<i8>) -> bool {
-    // Edge case: Single-level or empty report
-    if data.len() <= 1 {
-        return true;
-    }
-
     let mut all_increasing = true;
     let mut all_decreasing = true;
 
@@ -64,5 +59,18 @@ fn is_safe_report(data: &Vec<i8>) -> bool {
     }
 
     println!("Unsafe: {:?}, Neither Increasing or decreasing", data);
+    return false;
+}
+
+/// Can be marked as safe if any value is removed
+fn can_be_safe(data: &Vec<i8>) -> bool {
+    for i in 0..data.len() {
+        let mut temp = data.clone();
+        temp.remove(i);
+
+        if is_safe_report(&temp) {
+            return true;
+        }
+    }
     return false;
 }
